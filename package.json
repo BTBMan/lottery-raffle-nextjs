@@ -16,9 +16,12 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.53.1",
     "next": "14.2.7",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "viem": "^2.21.1",
+    "wagmi": "^2.12.8"
   },
   "devDependencies": {
     "@antfu/eslint-config": "v2",
