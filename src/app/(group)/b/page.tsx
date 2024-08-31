@@ -4,6 +4,7 @@ export default function B() {
       <h1>
         (group)&nbsp;-&nbsp;
         b.tsx
+        =&gt; /b
       </h1>
     </main>
   )

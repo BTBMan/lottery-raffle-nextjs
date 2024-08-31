@@ -5,6 +5,8 @@ export default function Slug({ params }: { params: { slug: string } }) {
         [slug]&nbsp;-&nbsp;
         {params.slug}
         .tsx
+        =&gt;/
+        {params.slug}
       </h1>
     </main>
   )
