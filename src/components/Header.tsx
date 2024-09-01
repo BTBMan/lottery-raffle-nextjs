@@ -1,15 +1,10 @@
-'use client'
-
-import { useAccount } from 'wagmi'
+import MetamaskConnection from './MetaMaskConnection'
 
 export default function Header() {
-  const { address, isConnected } = useAccount()
-
-  console.log(address, isConnected)
-
   return (
-    <header className="">
-      <h1>header</h1>
+    <header className="flex justify-between items-center h-[80px] border-b-2 border-[var(--foreground-rgb)]">
+      <h1 className="text-[30px] font-bold">Lottery raffle</h1>
+      <MetamaskConnection />
     </header>
   )
 }

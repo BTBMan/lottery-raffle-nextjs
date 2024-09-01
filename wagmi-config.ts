@@ -1,5 +1,6 @@
 import { hardhat, mainnet, sepolia } from 'viem/chains'
 import { createConfig, http } from 'wagmi'
+import { metaMask } from 'wagmi/connectors'
 
 export function getWagmiConfig() {
   return createConfig({
@@ -10,6 +11,9 @@ export function getWagmiConfig() {
       [sepolia.id]: http(),
       [hardhat.id]: http(),
     },
+    connectors: [
+      metaMask(),
+    ],
   })
 }
 
