@@ -10,6 +10,7 @@ export default antfu(
   {
     rules: {
       'node/prefer-global/process': 'off',
+      'style/jsx-one-expression-per-line': 'off',
     },
   },
 ).prepend(compat.config({
