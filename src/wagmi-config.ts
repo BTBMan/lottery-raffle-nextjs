@@ -1,9 +1,24 @@
+import { connectorsForWallets } from '@rainbow-me/rainbowkit'
+import { metaMaskWallet } from '@rainbow-me/rainbowkit/wallets'
 import { hardhat, mainnet, sepolia } from 'viem/chains'
 import { createConfig, http } from 'wagmi'
-import { metaMask } from 'wagmi/connectors'
+
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: [metaMaskWallet],
+    },
+  ],
+  {
+    appName: 'Lottery raffle',
+    projectId: process.env.NEXT_PUBLIC_WALLET_PROJECT_ID!,
+  },
+)
 
 export function getWagmiConfig() {
   return createConfig({
+    connectors,
     chains: [mainnet, sepolia, hardhat],
     ssr: true,
     transports: {
@@ -11,9 +26,6 @@ export function getWagmiConfig() {
       [sepolia.id]: http(),
       [hardhat.id]: http(),
     },
-    connectors: [
-      metaMask(),
-    ],
   })
 }
 
