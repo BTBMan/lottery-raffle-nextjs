@@ -1,8 +1,8 @@
 'use client'
 
-import { useAccount, useBalance, useReadContracts, useWriteContract } from 'wagmi'
+import { useAccount, useBalance, useReadContracts, useWatchContractEvent, useWriteContract } from 'wagmi'
 import { formatEther } from 'viem'
-import { lotteryRaffle } from '@/contracts'
+import { VRFCoordinatorMock, lotteryRaffle } from '@/contracts'
 
 export default function Home() {
   const { isConnected } = useAccount()
@@ -19,6 +19,11 @@ export default function Home() {
     address: lotteryRaffle.address,
   })
 
+  const updateUI = () => {
+    refetchContractData()
+    refetchBalance()
+  }
+
   // enter raffle
   const { writeContract } = useWriteContract()
 
@@ -26,22 +31,33 @@ export default function Home() {
     if (entranceFeeData?.result) {
       writeContract({ ...lotteryRaffle, functionName: 'enterRaffle', value: entranceFeeData.result }, {
         onSuccess() {
-          refetchContractData()
-          refetchBalance()
+          // TODO need to optimize
+          updateUI()
         },
       })
     }
   }
 
+  useWatchContractEvent({
+    ...lotteryRaffle,
+    eventName: 'RequestedRaffleWinner',
+    onLogs(logs) {
+      const requestId = logs?.[0].args?.requestId
+      if (requestId) {
+        // TODO need to optimize
+        writeContract({ ...VRFCoordinatorMock, functionName: 'fulfillRandomWords', args: [requestId, lotteryRaffle.address] }, {
+          onSuccess() {
+            updateUI()
+          },
+        })
+      }
+    },
+  })
+
   async function pickAWinner() {
     if (numberOfPlayersData?.result) {
-      writeContract({ ...lotteryRaffle, functionName: 'performUpkeep', args: ['0x'] }, {
-        onSuccess() {
-          // refetchContractData()
-          // refetchBalance()
-          console.log('object')
-        },
-      })
+      // TODO need to optimize
+      writeContract({ ...lotteryRaffle, functionName: 'performUpkeep', args: ['0x'] })
     }
   }
 
@@ -68,6 +84,5 @@ export default function Home() {
           : <div className="text-[20px]">Please login!</div>
       }
     </>
-
   )
 }
