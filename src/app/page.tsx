@@ -31,7 +31,6 @@ export default function Home() {
     if (entranceFeeData?.result) {
       writeContract({ ...lotteryRaffle, functionName: 'enterRaffle', value: entranceFeeData.result }, {
         onSuccess() {
-          // TODO need to optimize
           updateUI()
         },
       })
@@ -44,7 +43,6 @@ export default function Home() {
     onLogs(logs) {
       const requestId = logs?.[0].args?.requestId
       if (requestId) {
-        // TODO need to optimize
         writeContract({ ...VRFCoordinatorMock, functionName: 'fulfillRandomWords', args: [requestId, lotteryRaffle.address] }, {
           onSuccess() {
             updateUI()
@@ -56,7 +54,6 @@ export default function Home() {
 
   async function pickAWinner() {
     if (numberOfPlayersData?.result) {
-      // TODO need to optimize
       writeContract({ ...lotteryRaffle, functionName: 'performUpkeep', args: ['0x'] })
     }
   }
