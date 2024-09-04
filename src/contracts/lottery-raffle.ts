@@ -1,7 +1,7 @@
 import type { Address } from 'viem'
 
 export const lotteryRaffle = {
-  address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0' as Address,
+  address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
   abi: [
     {
       inputs: [
@@ -469,5 +469,5 @@ export const lotteryRaffle = {
       stateMutability: 'nonpayable',
       type: 'function',
     },
-  ] as const,
-}
+  ],
+} as const
