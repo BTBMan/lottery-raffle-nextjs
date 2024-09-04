@@ -1,8 +1,9 @@
 'use client'
 
-import { useAccount, useBalance, useReadContracts, useWatchContractEvent, useWriteContract } from 'wagmi'
+import { useAccount, useBalance, useReadContracts, useWriteContract } from 'wagmi'
 import { formatEther } from 'viem'
-import { VRFCoordinatorMock, lotteryRaffle } from '@/contracts'
+import { lotteryRaffle } from '@/contracts'
+import PickAWinner from '@/components/PickAWinner'
 
 export default function Home() {
   const { isConnected } = useAccount()
@@ -37,27 +38,6 @@ export default function Home() {
     }
   }
 
-  useWatchContractEvent({
-    ...lotteryRaffle,
-    eventName: 'RequestedRaffleWinner',
-    onLogs(logs) {
-      const requestId = logs?.[0].args?.requestId
-      if (requestId) {
-        writeContract({ ...VRFCoordinatorMock, functionName: 'fulfillRandomWords', args: [requestId, lotteryRaffle.address] }, {
-          onSuccess() {
-            updateUI()
-          },
-        })
-      }
-    },
-  })
-
-  async function pickAWinner() {
-    if (numberOfPlayersData?.result) {
-      writeContract({ ...lotteryRaffle, functionName: 'performUpkeep', args: ['0x'] })
-    }
-  }
-
   return (
     <>
       {
@@ -74,7 +54,11 @@ export default function Home() {
                 </p>
                 <div className="space-x-1">
                   <button className="btn" type="button" onClick={enterRaffle}>Enter raffle</button>
-                  <button className="btn" type="button" onClick={pickAWinner}>Pick a winner</button>
+                  {
+                    process.env.NODE_ENV === 'development'
+                      ? <PickAWinner numberOfPlayers={numberOfPlayersData?.result} onPickedAWinner={updateUI} />
+                      : null
+                  }
                 </div>
               </div>
             )
